@@ -1,17 +1,14 @@
 package com.kareem.appusergithub.data.remote
 
 
-import com.kareem.appusergithub.data.response.DetailResponse
+import com.kareem.appusergithub.data.response.SearchResponse
 import com.kareem.appusergithub.utils.Constant
 import com.kareem.appusergithub.utils.Constant.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
@@ -51,7 +48,7 @@ interface ApiService {
         @Query("q") query: String,
         @Query("page") page: Int,
         @Query("per_page") itemsPerPage: Int
-    ):  DetailResponse
+    ): SearchResponse
 
 
 }

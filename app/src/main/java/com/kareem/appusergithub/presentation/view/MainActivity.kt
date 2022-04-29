@@ -101,9 +101,7 @@ class MainActivity : AppCompatActivity() {
                     if (result.error.message.toString().isNotEmpty()) {
                         if (binding.searchView.query.trim().isNotEmpty()) {
                             var errorMessage: String = ""
-                            if (result.error.localizedMessage.toString()
-                                    .contains("Failed to connect")
-                            )
+                            if (result.error.localizedMessage.toString().contains("Failed to connect"))
                                 errorMessage = "Not connected to internet"
                             else if (result.error.localizedMessage.toString().contains("Time Out"))
                                 errorMessage = "No Connected to internet"
