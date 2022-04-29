@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">App User Github</string>
+    <string name="full_name">User</string>
+    <string name="username">User</string>
+    <string name="repository">Repository</string>
+    <string name="follower">Follower</string>
+    <string name="following">Following</string>
+    <string name="search">Search User</string>
+    <string name="change_language_settings">Change Language Settings</string>
+    <string name="count_follower">000</string>
+    <string name="count_following">000</string>
+    <string name="count_repository">000</string>
+    <string name="setting">Setting</string>
+    <string name="title_repo">Repository</string>
+    <string name="title_following">Following</string>
+    <string name="title_follower">Follower</string>
+    <string name="title_url" translatable="false">url</string>
+    <string name="list_following">List Following</string>
+    <string name="list_follower">Not Found Follower</string>
+    <string name="followers" translatable="false">Followers</string>
+    <string name="detail_user" translatable="false">Detail</string>
+    <string name="not_found_following" translatable="false">Not Found Following</string>
+    <string name="unstar" translatable="false">Unstar</string>
+    <string name="star" translatable="false">Star</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="tidak_ada_following">Tidak ada Following</string>
+    <string name="tidak_ada_follower" translatable="false">Tidak ada Follower</string>
+    <string name="temukan_user_github" translatable="false">Temukan pengguna Github</string>
+</resources>

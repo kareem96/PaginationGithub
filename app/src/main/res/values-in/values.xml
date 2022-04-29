@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">App Pengguna Github</string>
+    <string name="full_name">Kareem</string>
+    <string name="username">Kareem96</string>
+    <string name="repository">Repositori</string>
+    <string name="follower">Pengikut</string>
+    <string name="following">Mengikuti</string>
+    <string name="search">Cari Pengguna</string>
+    <string name="change_language_settings">Pengaturan Ganti Bahasa</string>
+    <string name="count_follower">000</string>
+    <string name="count_following">000</string>
+    <string name="count_repository">000</string>
+    <string name="setting">Setting</string>
+    <string name="title_repo">Repositori</string>
+    <string name="title_following">Mengikuti</string>
+    <string name="title_follower">Pengikut</string>
+</resources>

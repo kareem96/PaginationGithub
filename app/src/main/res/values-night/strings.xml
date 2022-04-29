@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="change_theme">Change Theme</string>
+    <string name="tidak_ada_following">Tidak ada Following</string>
+    <string name="tidak_ada_follower">Tidak ada Follower</string>
+</resources>
