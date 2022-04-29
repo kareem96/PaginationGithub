@@ -1,57 +1,56 @@
 package com.kareem.appusergithub.presentation.adapter
 
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.kareem.appusergithub.data.model.UserItems
 import com.kareem.appusergithub.databinding.UserItemBinding
-import com.kareem.appusergithub.utils.DiffUtils
 
 
-class GithubUserAdapter: RecyclerView.Adapter<GithubUserAdapter.GithubUserViewHolder>() {
-    private var oldList = emptyList<UserItems>()
+class GithubUserAdapter: ListAdapter<UserItems, GithubUserAdapter.UserViewHolder>(DATA_COMPARATOR) {
+    companion object{
+        private val DATA_COMPARATOR = object : DiffUtil.ItemCallback<UserItems>(){
+            override fun areItemsTheSame(oldItem: UserItems, newItem: UserItems): Boolean {
+                return oldItem.avatarUrl == newItem.avatarUrl
+            }
 
-    fun setData(newList: ArrayList<UserItems>){
-        val diffUtils = DiffUtils(oldList, newList)
-        val diffResults = DiffUtil.calculateDiff(diffUtils)
-        oldList = newList
-        diffResults.dispatchUpdatesTo(this)
+            override fun areContentsTheSame(oldItem: UserItems, newItem: UserItems): Boolean {
+                return oldItem == newItem
+            }
+
+        }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GithubUserAdapter.GithubUserViewHolder {
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GithubUserAdapter.UserViewHolder {
         val view = UserItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return GithubUserViewHolder(view)
+        return UserViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: GithubUserAdapter.GithubUserViewHolder, position: Int) {
-        val user = oldList[position]
-        holder.bind(user)
-    }
 
-    override fun getItemCount(): Int {
-        return oldList.size
-    }
 
-    inner class GithubUserViewHolder(private val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    inner class UserViewHolder(private val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: UserItems){
             binding.apply {
                 itemName.text = user.login
                 Glide.with(itemView.context)
-                    .load(user.avatar_url)
+                    .load(user.avatarUrl)
                     .apply(RequestOptions.circleCropTransform())
                     .into(itemImage)
             }
-            itemView.setOnClickListener{
-                val intent = Intent(itemView.context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_ID, user.id)
-                intent.putExtra(DetailActivity.EXTRA_USERNAME, user.login)
-                intent.putExtra(DetailActivity.EXTRA_AVATAR, user.avatar_url)
-                itemView.context.startActivity(intent)
-            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        val repoItem = getItem(position)
+        if(repoItem != null){
+            holder.bind(repoItem)
         }
     }
 }
