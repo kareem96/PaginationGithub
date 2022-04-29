@@ -11,16 +11,18 @@ import java.io.IOException
 
 private const val GITHUB_STARTING_PAGE_INDEX = 1
 
-class Repository (private val apiService: ApiService) {
+class Repository(private val apiService: ApiService) {
 
 
     private val inMemoryCache = mutableListOf<UserItems>()
     private val searchResult = MutableSharedFlow<SearchResult>(replay = 1)
     private var lastRequestPage = GITHUB_STARTING_PAGE_INDEX
     private var isRequestInProgress = false
-    companion object{
+
+    companion object {
         private const val ITEM_PAGE = 100
     }
+
     suspend fun getSearchResultStream(query: String): Flow<SearchResult> {
         lastRequestPage = 1
         inMemoryCache.clear()
@@ -28,10 +30,10 @@ class Repository (private val apiService: ApiService) {
         return searchResult
     }
 
-    suspend fun requestMore(query: String){
-        if(isRequestInProgress) return
+    suspend fun requestMore(query: String) {
+        if (isRequestInProgress) return
         val succesful = requestSaveData(query)
-        if(succesful){
+        if (succesful) {
             lastRequestPage++
         }
     }
@@ -47,9 +49,9 @@ class Repository (private val apiService: ApiService) {
             val responseByName = getUserByName(query)
             searchResult.emit(SearchResult.Success(responseByName))
             successful = true
-        }catch (exception: IOException){
+        } catch (exception: IOException) {
             searchResult.emit(SearchResult.Error(exception))
-        }catch (exception: HttpException){
+        } catch (exception: HttpException) {
             searchResult.emit(SearchResult.Error(exception))
         }
         isRequestInProgress = false
@@ -61,7 +63,6 @@ class Repository (private val apiService: ApiService) {
             it.login.contains(query, true) || (it.login.contains(query, true))
         }
     }
-
 
 
 }

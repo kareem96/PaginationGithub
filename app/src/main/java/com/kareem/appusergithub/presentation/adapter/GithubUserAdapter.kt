@@ -12,9 +12,10 @@ import com.kareem.appusergithub.data.model.UserItems
 import com.kareem.appusergithub.databinding.UserItemBinding
 
 
-class GithubUserAdapter: ListAdapter<UserItems, GithubUserAdapter.UserViewHolder>(DATA_COMPARATOR) {
-    companion object{
-        private val DATA_COMPARATOR = object : DiffUtil.ItemCallback<UserItems>(){
+class GithubUserAdapter :
+    ListAdapter<UserItems, GithubUserAdapter.UserViewHolder>(DATA_COMPARATOR) {
+    companion object {
+        private val DATA_COMPARATOR = object : DiffUtil.ItemCallback<UserItems>() {
             override fun areItemsTheSame(oldItem: UserItems, newItem: UserItems): Boolean {
                 return oldItem.avatarUrl == newItem.avatarUrl
             }
@@ -27,16 +28,18 @@ class GithubUserAdapter: ListAdapter<UserItems, GithubUserAdapter.UserViewHolder
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GithubUserAdapter.UserViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): GithubUserAdapter.UserViewHolder {
         val view = UserItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserViewHolder(view)
     }
 
 
-
-
-    inner class UserViewHolder(private val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: UserItems){
+    inner class UserViewHolder(private val binding: UserItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: UserItems) {
             binding.apply {
                 itemName.text = user.login
                 Glide.with(itemView.context)
@@ -49,7 +52,7 @@ class GithubUserAdapter: ListAdapter<UserItems, GithubUserAdapter.UserViewHolder
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val repoItem = getItem(position)
-        if(repoItem != null){
+        if (repoItem != null) {
             holder.bind(repoItem)
         }
     }

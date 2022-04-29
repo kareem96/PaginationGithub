@@ -3,31 +3,25 @@ package com.kareem.appusergithub.presentation.view
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kareem.appusergithub.R
 import com.kareem.appusergithub.presentation.adapter.GithubUserAdapter
 import com.kareem.appusergithub.databinding.ActivityMainBinding
 import com.kareem.appusergithub.di.Injection
 import com.kareem.appusergithub.presentation.viewModel.MainViewModel
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-
+import com.kareem.appusergithub.data.model.SearchResult
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private  val adapter= GithubUserAdapter()
+    private val adapter = GithubUserAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +34,10 @@ class MainActivity : AppCompatActivity() {
             binding.rvMain.layoutManager = LinearLayoutManager(this)
         }
 
-        mainViewModel = ViewModelProvider(this, Injection.provideViewModelFactory()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(
+            this,
+            Injection.provideViewModelFactory()
+        )[MainViewModel::class.java]
 
         setupScrollListener()
         val query = ""
@@ -64,12 +61,22 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+
+    private fun updateRepoListFromInput() {
+        binding.searchView.query.trim().let {
+            if (it.isNotEmpty()) {
+                binding.rvMain.scrollToPosition(0)
+                mainViewModel.getSearch(it.toString())
+            }
+        }
+    }
+
     private fun initSearch(query: String) {
         binding.searchView.setQuery(query, true)
         binding.searchView.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if(query != null){
+                    if (query != null) {
                         updateRepoListFromInput()
                     }
                     return true
@@ -82,44 +89,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateRepoListFromInput() {
-        binding.searchView.query.trim().let {
-            if(it.isNotEmpty()){
-                binding.rvMain.scrollToPosition(0)
-                mainViewModel.getSearch(it.toString())
-            }
-        }
-
-    }
-
     private fun initAdapter() {
         binding.rvMain.adapter = adapter
-        mainViewModel.repoResult.observe(this){result ->
-            when(result){
-                is com.kareem.appusergithub.data.model.SearchResult.Success ->{
+        mainViewModel.repoResult.observe(this) { result ->
+            when (result) {
+                is SearchResult.Success -> {
                     adapter.submitList(result.data)
+                    showLoading(result.data.isEmpty())
                 }
-                is com.kareem.appusergithub.data.model.SearchResult.Error -> {
-                    if(result.error.message.toString().isNotEmpty()){
-                        if(binding.searchView.query.trim().isNotEmpty()){
+                is SearchResult.Error -> {
+                    if (result.error.message.toString().isNotEmpty()) {
+                        if (binding.searchView.query.trim().isNotEmpty()) {
                             var errorMessage: String = ""
-                            if(result.error.localizedMessage.toString().contains("Failed to connect"))
-                                errorMessage = ""
-                            else if(result.error.localizedMessage.toString().contains("Time Out"))
+                            if (result.error.localizedMessage.toString()
+                                    .contains("Failed to connect")
+                            )
+                                errorMessage = "Not connected to internet"
+                            else if (result.error.localizedMessage.toString().contains("Time Out"))
                                 errorMessage = "No Connected to internet"
-                            else if(result.error.localizedMessage.toString().contains("HTTP 403"))
+                            else if (result.error.localizedMessage.toString().contains("HTTP 403"))
                                 errorMessage = ""
-                            /*showError(errorMessage, true)*/
                         }
                     }
                 }
             }
         }
     }
-    /*private fun obtainFactory(activity: AppCompatActivity): MainViewModel{
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(activity.application)
-        return ViewModelProvider(this, factory)[MainViewModel::class.java]
-    }*/
 
 
     private fun showTextDummy(state: Boolean) {
@@ -131,21 +126,10 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(loading: Boolean) {
         binding.apply {
             progressbar.visibility = if (loading) View.VISIBLE else View.GONE
-            dummyMain.visibility = if(loading) View.INVISIBLE else View.GONE
-            imgDummy.visibility = if(loading) View.INVISIBLE else View.GONE
-            rvMain.isGone = loading
+            dummyMain.visibility = if (loading) View.INVISIBLE else View.GONE
+            imgDummy.visibility = if (loading) View.INVISIBLE else View.GONE
 
         }
     }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.settings, menu)
-        return true
-    }
-
-
-
 
 }
